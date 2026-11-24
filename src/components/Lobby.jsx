@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { emit } from '../socket.js';
 
-export default function Lobby({ onJoin }) {
+export default function Lobby({ onCreate, onJoin }) {
   const [name, setName] = useState(localStorage.getItem('monopoly:name') || '');
   const [joinCode, setJoinCode] = useState('');
-  const [busy, setBusy] = useState(false);
   const [err, setErr] = useState(null);
 
   const ensureName = () => {
@@ -14,26 +12,14 @@ export default function Lobby({ onJoin }) {
   };
 
   const create = () => {
-    if (busy) return;
-    setBusy(true);
     setErr(null);
-    emit('createRoom', ensureName(), (res) => {
-      setBusy(false);
-      if (res.ok) onJoin(res.roomCode, res.playerId);
-      else setErr(res.error);
-    });
+    onCreate(ensureName());
   };
 
   const join = () => {
-    if (busy) return;
     if (!joinCode.trim()) { setErr('请输入房间码'); return; }
-    setBusy(true);
     setErr(null);
-    emit('joinRoom', { roomCode: joinCode.trim(), name: ensureName() }, (res) => {
-      setBusy(false);
-      if (res.ok) onJoin(res.roomCode, res.playerId);
-      else setErr(res.error);
-    });
+    onJoin(joinCode.trim(), ensureName());
   };
 
   return (
@@ -52,9 +38,7 @@ export default function Lobby({ onJoin }) {
           />
         </label>
 
-        <button className="btn btn-primary" disabled={busy} onClick={create}>
-          {busy ? '创建中…' : '创建房间'}
-        </button>
+        <button className="btn btn-primary" onClick={create}>创建房间</button>
 
         <div className="divider"><span>或加入朋友房间</span></div>
 
@@ -66,7 +50,7 @@ export default function Lobby({ onJoin }) {
             maxLength={6}
             placeholder="房间码"
           />
-          <button className="btn btn-secondary" disabled={busy} onClick={join}>加入</button>
+          <button className="btn btn-secondary" onClick={join}>加入</button>
         </div>
 
         {err && <p className="lobby-error">{err}</p>}

@@ -4,8 +4,7 @@ import Dice from './Dice.jsx';
 import ActionBar from './ActionBar.jsx';
 import PropertyModal from './PropertyModal.jsx';
 
-export default function GameBoard({ state }) {
-  const me = state.youId;
+export default function GameBoard({ state, me }) {
   const cur = state.players[state.currentTurn];
   const myTurn = cur?.id === me;
 
@@ -56,7 +55,6 @@ export default function GameBoard({ state }) {
           cell={cell}
           owner={owner}
           houses={state.houses[cell.index] || 0}
-          players={state.players}
           me={me}
           myTurn={myTurn}
           phase={state.phase}

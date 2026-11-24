@@ -1,4 +1,4 @@
-import { emit } from '../socket.js';
+import { act } from '../room.js';
 
 export default function ActionBar({ state, myTurn }) {
   const cur = state.players[state.currentTurn];
@@ -15,7 +15,7 @@ export default function ActionBar({ state, myTurn }) {
   if (phase === 'roll') {
     return (
       <div className="actionbar">
-        <button className="btn btn-primary big" onClick={() => emit('roll')}>🎲 掷骰子</button>
+        <button className="btn btn-primary big" onClick={() => act('roll')}>🎲 掷骰子</button>
       </div>
     );
   }
@@ -23,8 +23,8 @@ export default function ActionBar({ state, myTurn }) {
   if (phase === 'jail') {
     return (
       <div className="actionbar">
-        <button className="btn btn-primary" onClick={() => emit('payJailFine')}>付 ¥500 出狱</button>
-        <button className="btn btn-secondary" onClick={() => emit('rollJailDice')}>掷骰（出双即出狱）</button>
+        <button className="btn btn-primary" onClick={() => act('payJailFine')}>付 ¥500 出狱</button>
+        <button className="btn btn-secondary" onClick={() => act('rollJailDice')}>掷骰（出双即出狱）</button>
       </div>
     );
   }
@@ -34,8 +34,8 @@ export default function ActionBar({ state, myTurn }) {
     return (
       <div className="actionbar">
         <span className="buy-hint">「{cell?.name}」¥{cell?.price} — 买下吗？</span>
-        <button className="btn btn-primary" onClick={() => emit('buy', true)}>买下</button>
-        <button className="btn btn-secondary" onClick={() => emit('buy', false)}>放弃</button>
+        <button className="btn btn-primary" onClick={() => act('buy', true)}>买下</button>
+        <button className="btn btn-secondary" onClick={() => act('buy', false)}>放弃</button>
       </div>
     );
   }
@@ -44,7 +44,7 @@ export default function ActionBar({ state, myTurn }) {
     return (
       <div className="actionbar">
         <span className="wait-hint">可点击自己的城市盖房</span>
-        <button className="btn btn-primary" onClick={() => emit('endTurn')}>结束回合 →</button>
+        <button className="btn btn-primary" onClick={() => act('endTurn')}>结束回合 →</button>
       </div>
     );
   }

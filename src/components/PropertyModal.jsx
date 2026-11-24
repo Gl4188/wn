@@ -1,7 +1,7 @@
-import { emit } from '../socket.js';
+import { act } from '../room.js';
 
 export default function PropertyModal({
-  cell, owner, houses, players, me, myTurn, phase, buildable, onClose,
+  cell, owner, houses, me, myTurn, phase, buildable, onClose,
 }) {
   const isMine = owner?.id === me;
   const canBuild = myTurn && isMine && buildable.includes(cell.index) && phase !== 'buy';
@@ -53,7 +53,7 @@ export default function PropertyModal({
         )}
 
         {canBuild && (
-          <button className="btn btn-primary" onClick={() => emit('build', cell.index)}>
+          <button className="btn btn-primary" onClick={() => act('build', cell.index)}>
             盖房 ¥{cell.houseCost}
           </button>
         )}

@@ -30,10 +30,10 @@ export class Game {
   }
 
   // ---------- 玩家 ----------
-  addPlayer(name) {
+  addPlayer(name, id) {
     if (this.players.length >= 6) throw new Error('房间已满（最多 6 人）');
     const p = {
-      id: 'p' + (++idCounter),
+      id: id || ('p' + (++idCounter)),
       name: (name || '').trim() || '玩家' + (this.players.length + 1),
       color: PLAYER_COLORS[this.players.length],
       cash: START_CASH,

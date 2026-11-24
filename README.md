@@ -10,63 +10,50 @@
 - 📱 移动端优先：手机浏览器直接玩，无需安装 App
 - 🏙️ 25 座中国城市 + 交通枢纽 + 公共事业 + 机会/命运卡
 - 🏠 房子/旅馆升级（集齐同组、均衡建设）
-- 🎲 服务端权威掷骰，防作弊
-- 🔁 断线重连：刷新页面可回到原房间继续
+- 🔁 断线重连：刷新页面后重进同一房间即可恢复
 
 ## 🛠️ 技术栈
 
-- 后端：Node.js + Express + Socket.IO（权威游戏状态）
-- 前端：React + Vite
-- 部署：Render（免费 Web Service，一条链接即玩）
+- 前端：React + Vite（纯静态，移动端优先）
+- 实时通信：**Supabase Realtime**（presence 管成员、broadcast 同步状态）
+- 游戏逻辑：房主浏览器权威（`src/game/game.js` 状态机）
+- 部署：**GitHub Pages**（免费、无需服务器）
+
+> 注意：本方案「房主权威」，玩的时候**房主的手机/浏览器需保持在线**；房主关闭页面则该局结束。
 
 ## 📁 项目结构
 
 ```
 monopoly-china/
-├── server/          # Express + Socket.IO 后端
-│   └── src/
-│       ├── board.js   # 40 格地图数据
-│       ├── cards.js   # 机会/命运卡牌堆
-│       ├── game.js    # 核心状态机（回合/买地/收租/盖房/监狱/破产）
-│       ├── rooms.js   # 房间管理
-│       └── index.js   # 服务入口
-├── client/          # React + Vite 前端
-└── render.yaml      # Render 一键部署蓝图
+├── index.html
+├── vite.config.js        # base: './'（GitHub Pages 相对路径）
+├── .github/workflows/    # GitHub Pages 自动部署
+└── src/
+    ├── room.js           # Supabase 房主权威控制器（房间/成员/动作/广播）
+    ├── App.jsx           # 视图路由（大厅/等待房/对局/结算）
+    ├── game/             # 纯 JS 游戏逻辑
+    │   ├── game.js       # 状态机：回合/买地/收租/盖房/监狱/破产
+    │   ├── board.js      # 40 格地图
+    │   └── cards.js      # 机会/命运卡
+    └── components/       # 棋盘、格子、骰子、操作栏、弹窗等
 ```
 
 ## 🚀 本地运行
 
 ```bash
-# 1. 安装依赖（npm workspaces 一次装好前后端）
 npm install
-
-# 2. 同时启动后端(10000) + 前端(5173)
-npm run dev
+npm run dev      # 打开 http://localhost:5173
 ```
 
-打开 http://localhost:5173 ，开两个浏览器窗口（或手机连同一 Wi-Fi 访问电脑 IP）即可双人对战测试。
+开两个浏览器窗口（或手机连同一 Wi-Fi 访问电脑 IP），一个创建房间、一个输入房码加入，即可双人对战测试。
 
-## 📦 发布到 GitHub + Render
+## 📦 部署到 GitHub Pages
 
-### 上传 GitHub
+已配置 GitHub Actions（`.github/workflows/deploy.yml`），push 到 `main` 会自动构建并发布。
 
-```bash
-git init
-git add .
-git commit -m "init: 中国大富翁在线对战"
-git branch -M main
-git remote add origin https://github.com/<你的用户名>/monopoly-china.git
-git push -u origin main
-```
-
-### 部署 Render
-
-1. 注册/登录 [Render](https://render.com)（用 GitHub 账号即可）
-2. Dashboard → **New +** → **Blueprint**
-3. 选择 `monopoly-china` 仓库 → 自动读取 `render.yaml` → **Apply**
-4. 等待构建完成，拿到形如 `https://monopoly-china.onrender.com` 的链接
-
-> ⚠️ Render 免费层在空闲约 15 分钟后会休眠，首次访问需等待约 1 分钟冷启动，属正常现象。
+1. 仓库 **Settings → Pages**，将 **Source** 设为 **GitHub Actions**
+2. push 后，在 **Actions** 页确认部署成功
+3. 访问 `https://<用户名>.github.io/wn/`（即本仓库 `wn`）
 
 ## 🎮 玩法说明
 

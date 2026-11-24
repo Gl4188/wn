@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { emit } from '../socket.js';
+import { act } from '../room.js';
 
-export default function WaitingRoom({ state, onLeave }) {
-  const me = state.youId;
+export default function WaitingRoom({ state, me, onLeave }) {
   const isHost = state.players[0]?.id === me;
   const [copied, setCopied] = useState(false);
 
@@ -40,7 +39,7 @@ export default function WaitingRoom({ state, onLeave }) {
         <button
           className="btn btn-primary"
           disabled={!isHost || state.players.length < 2}
-          onClick={() => emit('startGame')}
+          onClick={() => act('startGame')}
         >
           {state.players.length < 2
             ? '至少需要 2 名玩家'

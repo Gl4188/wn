@@ -1,6 +1,5 @@
-export default function EndScreen({ state, onLeave }) {
+export default function EndScreen({ state, me, onLeave }) {
   const winner = state.players.find((p) => p.id === state.winnerId);
-  const me = state.youId;
   const iWin = winner?.id === me;
   const ranking = [...state.players].sort((a, b) => b.cash - a.cash);
 
