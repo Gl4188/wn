@@ -1,0 +1,22 @@
+{
+  "name": "monopoly-china",
+  "version": "1.0.0",
+  "description": "中国大富翁 · 在线多人对战",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,client -c blue,green \"npm:dev -w server\" \"npm:dev -w client\"",
+    "build": "npm run build -w client",
+    "start": "npm run start -w server",
+    "test": "node server/src/smoke-test.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
